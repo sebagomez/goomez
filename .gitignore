@@ -1,8 +1,9 @@
+
 packages/
 bin/
 obj/
 node_modules/
 .vs/
-.vscod/
+.vscode/
 
 *.suo

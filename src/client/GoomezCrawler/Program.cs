@@ -8,8 +8,9 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml;
 
-using GoomezSearchHelper;
-using GoomezSearchHelper.Managers;
+using GoomezIndexHelper;
+using GoomezIndexHelper.Managers;
+using Microsoft.Extensions.Configuration;
 
 namespace GoomezCrawler
 {
@@ -46,6 +47,8 @@ namespace GoomezCrawler
 
 		#endregion
 
+		public static IConfiguration Configuration { get; set; }
+
 		static int Main(string[] args)
 		{
 			chrono.Start();
@@ -56,7 +59,7 @@ namespace GoomezCrawler
 
 				K_CURRENTPATH = Assembly.GetExecutingAssembly().Location.Remove(Assembly.GetExecutingAssembly().Location.LastIndexOf(@"\"));
 
-				TraceManager.Initialize("GoomezCrawler", Path.Combine(K_CURRENTPATH, "tracing.config"));
+				//TraceManager.Initialize("GoomezCrawler", Path.Combine(K_CURRENTPATH, "tracing.config"));
 
 				if (args.Length > 1)
 				{
@@ -70,10 +73,18 @@ namespace GoomezCrawler
 				if (m_extensions.Count == 0)
 					throw new ApplicationException("No extensions found.");
 
-				string sdsValue = ConfigurationManager.AppSettings["UseSDS"];
+
+				var builder = new ConfigurationBuilder()
+					.SetBasePath(Directory.GetCurrentDirectory())
+					.AddJsonFile("appsettings.json");
+
+				Configuration = builder.Build();
+
+
+				string sdsValue = Configuration["UseSDS"];
 				bool.TryParse(sdsValue, out UseSDS);
 
-				string parallelValue = ConfigurationManager.AppSettings["UseParallel"];
+				string parallelValue = Configuration["UseParallel"];
 				bool.TryParse(parallelValue, out UseParallel);
 
 				Console.WriteLine("Indexer started... please wait! (it might take a while)");
@@ -394,7 +405,7 @@ namespace GoomezCrawler
 				Console.WriteLine(errorMsg);
 				Console.ForegroundColor = cc;
 
-				TraceManager.Error(errorMsg);
+				//TraceManager.Error(errorMsg);
 			}
 		}
 
@@ -402,7 +413,7 @@ namespace GoomezCrawler
 		{
 			ShowAndLog("\r\nIndexing started at " + started.ToShortTimeString() + " and ended at " + DateTime.Now.ToShortTimeString());
 			string summary = string.Format("It took '{0:0.#}' seconds to index {1} files. Parallel:{2} Errors:{3}", chrono.Elapsed.TotalSeconds, m_indexed, UseParallel, errors);
-			TraceManager.Debug(summary);
+			//TraceManager.Debug(summary);
 			ShowAndLog(summary);
 			if (errors)
 			{
@@ -421,9 +432,9 @@ namespace GoomezCrawler
 
 		private static void AddExclusions()
 		{
-			TraceManager.Info("== EXCLUSIONS ==");
-			foreach (string dir in m_errors.Keys)
-				TraceManager.Info(string.Format("<exclusion>{0}</exclusion>", dir));
+			//TraceManager.Info("== EXCLUSIONS ==");
+			//foreach (string dir in m_errors.Keys)
+			//	TraceManager.Info(string.Format("<exclusion>{0}</exclusion>", dir));
 
 		}
 
@@ -436,7 +447,7 @@ namespace GoomezCrawler
 		private static void Log(string tokens)
 		{
 #if DEBUG
-			TraceManager.Debug(tokens);
+			//TraceManager.Debug(tokens);
 #endif
 		}
 

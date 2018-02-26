@@ -1,0 +1,35 @@
+﻿.bigLogo {
+	font-family: Product Sans;
+	font-size: 85px;
+	font-weight: bold;
+}
+
+.blue {
+	color: rgb(72, 133,237);
+}
+
+.red {
+	color: rgb(219,50,54);
+}
+
+.yellow {
+	color: rgb(244,194,13);
+}
+
+.green {
+	color: rgb(60,186,84);
+}
+
+.z {
+	transform: rotate(-10deg);
+}
+
+/*.input {
+	width: 500px;
+	height: 30px;
+	font-size: 25px;
+}*/
+
+.bigLogo > span {
+	display: inline-block;
+}

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+  <servers>
+	<server>soft-srv</server>
+  </servers>
+  <exclusions>
+	<exclusion>\\soft-srv\A</exclusion>
+	<exclusion>\\soft-srv\gxportal</exclusion>
+	<exclusion>\\cristian-oct07\Software\Internet\VPN</exclusion>
+	<exclusion>\\pc003\Bandeja\Software\utils\HFTheat</exclusion>
+	<exclusion>\\soft-srv\Software\Evento\Practico GXquery</exclusion>
+	<exclusion>\\soft-srv\Software\Ibm\Client Access V5R4</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\AdventureWorks</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\DotNet\sdk2.0\English\dotNetRedist\x32</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\DotNet\sdk2.0\English\dotNetRedist\x64</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\SilverLight</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\VirtualPC</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\VirtualServer2005</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\Visual Studio 2008 Professional beta 2</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\Windows Mobile</exclusion>
+	<exclusion>\\soft-srv\Software\Microsoft\Windows Vista SP1</exclusion>
+	<exclusion>\\soft-srv\Software\Oracle\Oracle9i\NTClient9011\Disk1\stage\locks</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\baseDeDatos\mysql\mysql-5.0.22-win</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\baseDeDatos\mysql\mysql-5.0.37-win</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\baseDeDatos\mysql\mysql-connector-java-5.1.6</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\LG</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\rssReaders</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\vmware</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\WebserviceStudio20</exclusion>
+	<exclusion>\\soft-srv\Software\Utils\Winrar</exclusion>
+	<exclusion>\\soft-srv\db</exclusion>
+	<exclusion>\\soft-srv\cable</exclusion>
+	<exclusion>\\soft-srv\cable2</exclusion>
+	<exclusion>\\wsus-centro\software\Microsoft\Visual Studio\Visual Studio.Net 2003 Enterprise</exclusion>
+	<exclusion>\\wsus-centro\software\Microsoft\DotNet\Visual Studio .NET 2003 Enterprise Architect</exclusion>
+  </exclusions>
+  <inclusions>
+	<inclusion>\\dionisiod\artech-r</inclusion>
+	<inclusion>\\aaguiarxp\downloads</inclusion>
+	<inclusion>\\aaguiarxp\downloads2</inclusion>
+	<inclusion>\\cristian-abr11\Software</inclusion>
+	<inclusion>\\cristian-abr11\Software2</inclusion>
+	<inclusion>\\cristian-abr11\Software3</inclusion>
+	<inclusion>\\dionisiod\artech-q\DeklaritSetups</inclusion>
+	<inclusion>\\dionisiod\setups</inclusion>
+	<inclusion>\\builder\discoe\gxver\Rocha\Components</inclusion>
+	<inclusion>\\fsartech\Software</inclusion>
+	<inclusion>\\fsartech\Software2</inclusion>
+	<inclusion>\\wsus-centro\software</inclusion>
+  </inclusions>
+  <extensions>
+	<extension>.exe</extension>
+	<extension>.msi</extension>
+	<extension>.iso</extension>
+	<extension>.zip</extension>
+	<extension>.rar</extension>
+	<extension>.img</extension>
+	<extension>.vmc</extension>
+	<extension>.vhd</extension>
+  </extensions>
+</config>

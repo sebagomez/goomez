@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+	<servers>
+	</servers>
+	<exclusions>
+	</exclusions>
+	<inclusions>
+ 		<inclusion>\\cristianpc-w10\Software</inclusion>
+ 		<inclusion>\\dionisiod\artech-r</inclusion>
+		<inclusion>\\dionisiod\setups</inclusion>
+		<inclusion>\\fs-zona\Software</inclusion>
+		<inclusion>\\GXFS\Public\Software</inclusion>
+	</inclusions>
+	<extensions>
+		<extension>.exe</extension>
+		<extension>.msi</extension>
+		<extension>.iso</extension>
+		<extension>.zip</extension>
+		<extension>.rar</extension>
+		<extension>.img</extension>
+		<extension>.vmc</extension>
+		<extension>.vhd</extension>
+		<extension>.vsix</extension>
+	</extensions>
+</config>

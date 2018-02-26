@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+  <servers>
+    <server>soft-srv</server>
+  </servers>
+  <exclusions>
+    <exclusion>\\soft-srv\A</exclusion>
+  </exclusions>
+  <inclusions>
+    <inclusion>\\other-srv\soft</inclusion>
+  </inclusions>
+  <extensions>
+    <extension>.exe</extension>
+    <extension>.msi</extension>
+  </extensions>
+</config>

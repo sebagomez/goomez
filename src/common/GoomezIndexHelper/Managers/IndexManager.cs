@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -12,15 +13,21 @@ namespace GoomezIndexHelper.Managers
 
 		public static void Initialize(string indexPath)
 		{
-			FSDirectory directory = FSDirectory.Open(new DirectoryInfo(indexPath));
-			m_indexWriter = new IndexWriter(directory, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29), true, Lucene.Net.Index.IndexWriter.MaxFieldLength.UNLIMITED);
+			if (!System.IO.Directory.Exists(indexPath))
+				System.IO.Directory.CreateDirectory(indexPath);
+
+			FSDirectory directory = FSDirectory.Open(indexPath);
+			IndexWriterConfig config = new IndexWriterConfig(Lucene.Net.Util.LuceneVersion.LUCENE_48, new StandardAnalyzer(Lucene.Net.Util.LuceneVersion.LUCENE_48));
+			//m_indexWriter = new IndexWriter(directory, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29), true, Lucene.Net.Index.IndexWriter.MaxFieldLength.UNLIMITED);
+
+			m_indexWriter = new IndexWriter(directory, config);
 		}
 
 		public static void CloseIndex()
 		{
 			if (m_indexWriter != null)
 			{
-				m_indexWriter.Optimize();
+				//m_indexWriter.Optimize();
 				m_indexWriter.Dispose();
 			}
 		}
@@ -28,12 +35,12 @@ namespace GoomezIndexHelper.Managers
 		public static void IndexFile(FileInfo file)
 		{
 			Document doc = new Document();
-			doc.Add(new Field(Constants.Full, file.FullName, Field.Store.YES, Field.Index.NO));
-			doc.Add(new Field(Constants.File, file.Name, Field.Store.YES, Field.Index.NO));
-			doc.Add(new Field(Constants.Folder, file.Directory.FullName, Field.Store.YES, Field.Index.NO));
-			doc.Add(new Field(Constants.Extension, file.Extension.Replace(".",""), Field.Store.YES, Field.Index.NO));
-			doc.Add(new Field(Constants.Size, file.Length.ToString(), Field.Store.YES, Field.Index.NO));
-			doc.Add(new Field(Constants.Content, GoomezIndexHelper.Tokenizer.TokenizeToIndex(file.FullName), Field.Store.YES, Field.Index.ANALYZED));
+			doc.Add(new TextField(Constants.Full, file.FullName, Field.Store.YES));
+			doc.Add(new TextField(Constants.File, file.Name, Field.Store.YES));
+			doc.Add(new TextField(Constants.Folder, file.Directory.FullName, Field.Store.YES));
+			doc.Add(new TextField(Constants.Extension, file.Extension.Replace(".",""), Field.Store.YES));
+			doc.Add(new TextField(Constants.Size, file.Length.ToString(), Field.Store.YES));
+			doc.Add(new TextField(Constants.Content, GoomezIndexHelper.Tokenizer.TokenizeToIndex(file.FullName), Field.Store.YES));
 
 			m_indexWriter.AddDocument(doc);
 		}

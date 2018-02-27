@@ -5,11 +5,11 @@ using System.IO;
 using System.Threading;
 using GoomezIndexHelper.Data;
 using GoomezIndexHelper.Helpers;
-using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Standard;
+//using Lucene.Net.Analysis;
+//using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
-using Lucene.Net.QueryParsers;
+//using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 
 
@@ -44,9 +44,9 @@ namespace GoomezIndexHelper.Managers
 			m_HistoryPath = historyPath;
 		}
 
-		public Lucene.Net.Util.Version LuceneVersion
+		public Lucene.Net.Util.LuceneVersion LuceneVersion
 		{
-			get { return Lucene.Net.Util.Version.LUCENE_30; }
+			get { return Lucene.Net.Util.LuceneVersion.LUCENE_48; }
 		}
 
 		public string SearchPath
@@ -66,6 +66,18 @@ namespace GoomezIndexHelper.Managers
 					m_searchDirectory = Lucene.Net.Store.FSDirectory.Open(dir);
 				}
 				return m_searchDirectory;
+			}
+		}
+
+		IndexReader m_searchIndex;
+		public IndexReader SearchIndex
+		{
+			get
+			{
+				if (m_searchIndex == null)
+					m_searchIndex = DirectoryReader.Open(SearchDirectory);
+
+				return m_searchIndex;
 			}
 		}
 
@@ -90,6 +102,19 @@ namespace GoomezIndexHelper.Managers
 			}
 		}
 
+		IndexReader m_historyIndex;
+		public IndexReader HistoryIndex
+		{
+			get
+			{
+				if (m_historyIndex == null)
+					m_historyIndex = DirectoryReader.Open(HistoryDirectory);
+
+				return m_historyIndex;
+			}
+		}
+
+
 		#region Search
 
 		public List<IndexedFile> Search(string pattern, User user)
@@ -108,7 +133,8 @@ namespace GoomezIndexHelper.Managers
 			if (pattern.ToLower().Contains(UNAUTHORIZED))
 				return list;
 
-			using (IndexSearcher searcher = new IndexSearcher(SearchDirectory, true))
+			//using (IndexSearcher searcher = new IndexSearcher(SearchDirectory, true))
+			IndexSearcher searcher = new IndexSearcher(SearchIndex);
 			{
 				list = new List<IndexedFile>();
 
@@ -117,9 +143,10 @@ namespace GoomezIndexHelper.Managers
 				if (pattern != tokenizedPattern)
 					pattern = pattern + " OR \"" + tokenizedPattern + "\"";
 
-				QueryParser parser = new QueryParser(LuceneVersion, Constants.Content, new StandardAnalyzer(LuceneVersion));
-				parser.DefaultOperator = QueryParser.Operator.AND;
-				Query query = parser.Parse(pattern);
+				//QueryParser parser = new QueryParser(LuceneVersion, Constants.Content, new StandardAnalyzer(LuceneVersion));
+				//parser.DefaultOperator = QueryParser.Operator.AND;
+				//parser.Parse(pattern);
+				Query query = new MatchAllDocsQuery(); 
 
 				TopDocs docs = searcher.Search(query, max);
 				//TraceManager.Debug($"{docs.TotalHits} hits found for '{pattern}'");
@@ -167,22 +194,24 @@ namespace GoomezIndexHelper.Managers
 				throw new ArgumentNullException("user");
 
 			List<TextSearched> list = null;
-			using (IndexSearcher searcher = new IndexSearcher(HistoryDirectory, true))
+			IndexSearcher searcher = new IndexSearcher(HistoryIndex);
 			{
 				list = new List<TextSearched>();
 
 				string from = datePicked.ToString("yyyyMMddHHmmss");
 				string to = datePicked.AddDays(1).ToString("yyyyMMddHHmmss");
 
-				QueryParser parserDate = new QueryParser(LuceneVersion, Constants.DateTicks, new WhitespaceAnalyzer());
-				Query queryDate = parserDate.Parse("[" + from + " TO " + to + "]");
+				//QueryParser parserDate = new QueryParser(LuceneVersion, Constants.DateTicks, new WhitespaceAnalyzer());
+				//Query queryDate = parserDate.Parse("[" + from + " TO " + to + "]");
 
 				BooleanQuery query = new BooleanQuery();
 
-				query.Add(queryDate, Occur.MUST);
+				//query.Add(queryDate, Occur.MUST);
 
-				QueryParser parserUser = new QueryParser(LuceneVersion, Constants.VisitUser, new WhitespaceAnalyzer());
-				Query queryUser = parserUser.Parse(user.Name);
+				//QueryParser parserUser = new QueryParser(LuceneVersion, Constants.VisitUser, new WhitespaceAnalyzer());
+				//Query queryUser = parserUser.Parse(user.Name);
+
+				Query queryUser = new MatchAllDocsQuery();
 				query.Add(queryUser, Occur.MUST);
 
 				TopDocs docs = searcher.Search(query, int.MaxValue);
@@ -205,98 +234,98 @@ namespace GoomezIndexHelper.Managers
 
 		}
 
-		public List<TextSearched> SearchHistoryByUserPattern(string pattern, User user)
-		{
-			if (string.IsNullOrEmpty(m_HistoryPath))
-				throw new ApplicationException("HistoryPath not set.");
+		//public List<TextSearched> SearchHistoryByUserPattern(string pattern, User user)
+		//{
+		//	if (string.IsNullOrEmpty(m_HistoryPath))
+		//		throw new ApplicationException("HistoryPath not set.");
 
-			if (user == null)
-				throw new ArgumentNullException("user");
+		//	if (user == null)
+		//		throw new ArgumentNullException("user");
 
-			List<TextSearched> list = null;
-			using (IndexSearcher searcher = new IndexSearcher(HistoryDirectory, true))
-			{
+		//	List<TextSearched> list = null;
+		//	using (IndexSearcher searcher = new IndexSearcher(HistoryDirectory, true))
+		//	{
 
-				//TraceManager.Debug(string.Format("{0} is looking for history on {1}", user, pattern));
+		//		//TraceManager.Debug(string.Format("{0} is looking for history on {1}", user, pattern));
 
-				list = new List<TextSearched>();
+		//		list = new List<TextSearched>();
 
-				QueryParser parserUser = new QueryParser(LuceneVersion, Constants.VisitUser, new WhitespaceAnalyzer());
-				parserUser.DefaultOperator = QueryParser.Operator.AND;
-				QueryParser parserPattern = new QueryParser(LuceneVersion, Constants.SearchedText, new WhitespaceAnalyzer());
-				parserUser.DefaultOperator = QueryParser.Operator.AND;
+		//		QueryParser parserUser = new QueryParser(LuceneVersion, Constants.VisitUser, new WhitespaceAnalyzer());
+		//		parserUser.DefaultOperator = QueryParser.Operator.AND;
+		//		QueryParser parserPattern = new QueryParser(LuceneVersion, Constants.SearchedText, new WhitespaceAnalyzer());
+		//		parserUser.DefaultOperator = QueryParser.Operator.AND;
 
-				Query queryUser = parserUser.Parse(user.Name);
-				Query queryPattern = parserPattern.Parse(pattern);
+		//		Query queryUser = parserUser.Parse(user.Name);
+		//		Query queryPattern = parserPattern.Parse(pattern);
 
-				BooleanQuery query = new BooleanQuery();
-				query.Add(queryUser, Occur.MUST);
-				query.Add(queryPattern, Occur.MUST);
+		//		BooleanQuery query = new BooleanQuery();
+		//		query.Add(queryUser, Occur.MUST);
+		//		query.Add(queryPattern, Occur.MUST);
 
-				TopDocs hits = searcher.Search(query, int.MaxValue);
-				for (int i = 0; i < hits.TotalHits; i++)
-				{
-					TextSearched st = new TextSearched();
+		//		TopDocs hits = searcher.Search(query, int.MaxValue);
+		//		for (int i = 0; i < hits.TotalHits; i++)
+		//		{
+		//			TextSearched st = new TextSearched();
 
-					Document doc = searcher.Doc(i);
-					st.DateTicks = doc.Get(Constants.DateTicks);
-					st.VisitUser = doc.Get(Constants.VisitUser);
-					st.SearchedText = doc.Get(Constants.SearchedText);
+		//			Document doc = searcher.Doc(i);
+		//			st.DateTicks = doc.Get(Constants.DateTicks);
+		//			st.VisitUser = doc.Get(Constants.VisitUser);
+		//			st.SearchedText = doc.Get(Constants.SearchedText);
 
-					list.Add(st);
-				}
+		//			list.Add(st);
+		//		}
 
-				list.Sort();
-			}
+		//		list.Sort();
+		//	}
 
-			return list;
-		}
+		//	return list;
+		//}
 
-		public List<TextSearched> GetHistoryBetweenDates(DateTime fromDate, DateTime toDate, User user)
-		{
-			if (string.IsNullOrEmpty(m_HistoryPath))
-				throw new ApplicationException("HistoryPath not set.");
+		//public List<TextSearched> GetHistoryBetweenDates(DateTime fromDate, DateTime toDate, User user)
+		//{
+		//	if (string.IsNullOrEmpty(m_HistoryPath))
+		//		throw new ApplicationException("HistoryPath not set.");
 
-			if (user == null)
-				throw new ArgumentNullException("user");
+		//	if (user == null)
+		//		throw new ArgumentNullException("user");
 
-			List<TextSearched> list = null;
-			using (IndexSearcher searcher = new IndexSearcher(HistoryDirectory, true))
-			{
-				list = new List<TextSearched>();
+		//	List<TextSearched> list = null;
+		//	using (IndexSearcher searcher = new IndexSearcher(HistoryDirectory, true))
+		//	{
+		//		list = new List<TextSearched>();
 
-				string from = fromDate.ToString("yyyyMMddHHmmss");
-				string to = toDate.ToString("yyyyMMddHHmmss");
+		//		string from = fromDate.ToString("yyyyMMddHHmmss");
+		//		string to = toDate.ToString("yyyyMMddHHmmss");
 
-				QueryParser parserUser = new QueryParser(LuceneVersion, Constants.VisitUser, new WhitespaceAnalyzer());
-				parserUser.DefaultOperator = QueryParser.Operator.AND;
-				//parserUser.SetDefaultOperator(QueryParser.AND_OPERATOR);
-				QueryParser parserDate = new QueryParser(LuceneVersion, Constants.DateTicks, new WhitespaceAnalyzer());
+		//		QueryParser parserUser = new QueryParser(LuceneVersion, Constants.VisitUser, new WhitespaceAnalyzer());
+		//		parserUser.DefaultOperator = QueryParser.Operator.AND;
+		//		//parserUser.SetDefaultOperator(QueryParser.AND_OPERATOR);
+		//		QueryParser parserDate = new QueryParser(LuceneVersion, Constants.DateTicks, new WhitespaceAnalyzer());
 
-				Query queryUser = parserUser.Parse(user.Name);
-				Query queryDate = parserDate.Parse("[" + from + " TO " + to + "]");
+		//		Query queryUser = parserUser.Parse(user.Name);
+		//		Query queryDate = parserDate.Parse("[" + from + " TO " + to + "]");
 
-				BooleanQuery query = new BooleanQuery();
+		//		BooleanQuery query = new BooleanQuery();
 
-				query.Add(queryUser, Occur.MUST);
-				query.Add(queryDate, Occur.MUST);
+		//		query.Add(queryUser, Occur.MUST);
+		//		query.Add(queryDate, Occur.MUST);
 
-				TopDocs hits = searcher.Search(query, int.MaxValue);
-				for (int i = 0; i < hits.TotalHits; i++)
-				{
-					TextSearched st = new TextSearched();
+		//		TopDocs hits = searcher.Search(query, int.MaxValue);
+		//		for (int i = 0; i < hits.TotalHits; i++)
+		//		{
+		//			TextSearched st = new TextSearched();
 
-					Document doc = searcher.Doc(i);
-					st.DateTicks = doc.Get(Constants.DateTicks);
-					st.VisitUser = doc.Get(Constants.VisitUser);
-					st.SearchedText = doc.Get(Constants.SearchedText);
+		//			Document doc = searcher.Doc(i);
+		//			st.DateTicks = doc.Get(Constants.DateTicks);
+		//			st.VisitUser = doc.Get(Constants.VisitUser);
+		//			st.SearchedText = doc.Get(Constants.SearchedText);
 
-					list.Add(st);
-				}
-			}
-			return list;
+		//			list.Add(st);
+		//		}
+		//	}
+		//	return list;
 
-		}
+		//}
 
 		private void SaveSearch(Object data)
 		{
@@ -316,24 +345,24 @@ namespace GoomezIndexHelper.Managers
 			if (string.IsNullOrEmpty(pattern) || user == null)
 				return;
 
-			SaveSearchHistory(pattern, user);
+			//SaveSearchHistory(pattern, user);
 		}
 
-		public void SaveSearchHistory(string pattern, User user)
-		{
-			if (string.IsNullOrEmpty(m_HistoryPath))
-				throw new ApplicationException("HistoryPath not set.");
+		//public void SaveSearchHistory(string pattern, User user)
+		//{
+		//	if (string.IsNullOrEmpty(m_HistoryPath))
+		//		throw new ApplicationException("HistoryPath not set.");
 
-			using (IndexWriter index = new IndexWriter(HistoryDirectory, new StandardAnalyzer(LuceneVersion), !Directory.Exists(m_HistoryPath), IndexWriter.MaxFieldLength.UNLIMITED))
-			{
-				Document doc = new Document();
-				doc.Add(new Field(Constants.DateTicks, DateTime.Now.ToString("yyyyMMddHHmmss"), Field.Store.YES, Field.Index.NOT_ANALYZED));
-				doc.Add(new Field(Constants.VisitUser, user.Name, Field.Store.YES, Field.Index.NOT_ANALYZED));
-				doc.Add(new Field(Constants.SearchedText, pattern, Field.Store.YES, Field.Index.ANALYZED));
+		//	using (IndexWriter index = new IndexWriter(HistoryDirectory, new StandardAnalyzer(LuceneVersion), !Directory.Exists(m_HistoryPath), IndexWriter.MaxFieldLength.UNLIMITED))
+		//	{
+		//		Document doc = new Document();
+		//		doc.Add(new Field(Constants.DateTicks, DateTime.Now.ToString("yyyyMMddHHmmss"), Field.Store.YES, Field.Index.NOT_ANALYZED));
+		//		doc.Add(new Field(Constants.VisitUser, user.Name, Field.Store.YES, Field.Index.NOT_ANALYZED));
+		//		doc.Add(new Field(Constants.SearchedText, pattern, Field.Store.YES, Field.Index.ANALYZED));
 
-				index.AddDocument(doc);
-			}
-		}
+		//		index.AddDocument(doc);
+		//	}
+		//}
 
 		#endregion
 
@@ -346,7 +375,7 @@ namespace GoomezIndexHelper.Managers
 
 			try
 			{
-				IndexSearcher searcher = new IndexSearcher(HistoryDirectory, true);
+				IndexSearcher searcher = new IndexSearcher(HistoryIndex);
 
 				Term t = new Term(Constants.SearchedText, pattern);
 				FuzzyQuery query = new FuzzyQuery(t);

@@ -1,6 +1,7 @@
 import '../css/goomez.css';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
+import { ResultFile } from './ResultFile';
 
 
 interface SearchState {
@@ -40,7 +41,7 @@ export class Home extends React.Component<RouteComponentProps<{}>, SearchState> 
 			<button onClick={() => { this.search() }}>Search</button>
 			<ul>
 				{this.state.files.map(file =>
-					<li>{file}</li>
+					<ResultFile key={file} file={file}/>
 				)}
 			</ul>
 		</div>;

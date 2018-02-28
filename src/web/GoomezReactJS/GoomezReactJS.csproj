@@ -21,7 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\components\ResultFile.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\common\GoomezIndexHelper\GoomezIndexHelper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\components\ResultFile.tsx" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

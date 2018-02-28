@@ -24,5 +24,10 @@ namespace GoomezIndexHelper
 
         //Pager Properties
         public static readonly int PageSize = 25;
-    }
+
+		public static Lucene.Net.Util.LuceneVersion LuceneVersion
+		{
+			get { return Lucene.Net.Util.LuceneVersion.LUCENE_48; }
+		}
+	}
 }

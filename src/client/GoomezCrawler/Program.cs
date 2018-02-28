@@ -42,7 +42,6 @@ namespace GoomezCrawler
 		private static bool errors = false;
 		private static DateTime started;
 		private static Stopwatch chrono = new Stopwatch();
-		private static bool UseSDS = false;
 		private static bool UseParallel = false;
 
 		#endregion
@@ -73,16 +72,12 @@ namespace GoomezCrawler
 				if (m_extensions.Count == 0)
 					throw new ApplicationException("No extensions found.");
 
-
+				// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/index?tabs=basicconfiguration
 				var builder = new ConfigurationBuilder()
 					.SetBasePath(Directory.GetCurrentDirectory())
 					.AddJsonFile("appsettings.json");
 
 				Configuration = builder.Build();
-
-
-				string sdsValue = Configuration["UseSDS"];
-				bool.TryParse(sdsValue, out UseSDS);
 
 				string parallelValue = Configuration["UseParallel"];
 				bool.TryParse(parallelValue, out UseParallel);

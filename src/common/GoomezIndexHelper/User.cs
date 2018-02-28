@@ -21,5 +21,10 @@ namespace GoomezIndexHelper
 		{
 			return Name;
 		}
+
+		public static User Fake()
+		{
+			return new User("FakeUser");
+		}
 	}
 }

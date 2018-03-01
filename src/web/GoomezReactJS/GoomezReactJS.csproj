@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <None Remove="ClientApp\components\ResultFile.tsx" />
+    <None Remove="ClientApp\components\Search.tsx" />
+    <None Remove="ClientApp\IndexedFile.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\components\Search.tsx" />
     <TypeScriptCompile Include="ClientApp\components\ResultFile.tsx" />
+    <TypeScriptCompile Include="ClientApp\util\IndexedFile.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

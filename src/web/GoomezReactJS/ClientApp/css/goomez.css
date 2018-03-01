@@ -24,12 +24,39 @@
 	transform: rotate(-10deg);
 }
 
-/*.input {
-	width: 500px;
-	height: 30px;
-	font-size: 25px;
-}*/
+.bigInput {
+	width: 503px;
+	height: 34px;
+	font-size: 16px;
+	font-stretch: normal;
+	font-weight: 400;
+	font-family: Arial, Helvetica, sans-serif;
+	
+	padding-left: 16px;
+	padding-right: 9px;
+}
+
+	.bigInput:focus {
+		border-style: none;
+		box-shadow: 2px 2px 5px grey;
+	}
+
+	.bigInput:hover {
+		border-style: none;
+		box-shadow: 2px 2px 5px grey;
+	}
+
+.inputDiv {
+
+}
 
 .bigLogo > span {
 	display: inline-block;
+}
+
+.mainDiv {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 150px;
 }

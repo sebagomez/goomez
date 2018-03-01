@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using GoomezIndexHelper.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoomezReactJS.Controllers
@@ -10,13 +8,10 @@ namespace GoomezReactJS.Controllers
 	public class SearchController : Controller
 	{
 		[HttpGet("[action]")]
-		public IEnumerable<string> Search(string pattern)
+		public IEnumerable<IndexedFile> Search(string pattern)
 		{
 			GoomezIndexHelper.Managers.SearchManager mgr = new GoomezIndexHelper.Managers.SearchManager();
-			//foreach (var item in mgr.Search(pattern, null, 50))
-			//	yield return item.Full;
-
-			return mgr.Search(pattern, GoomezIndexHelper.User.Fake(), 50).Select(f => f.Full);
+			return mgr.Search(pattern, GoomezIndexHelper.User.Fake(), 50);
 		}
 	}
 }

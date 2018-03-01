@@ -11,7 +11,7 @@ namespace GoomezReactJS.Controllers
 		public IEnumerable<IndexedFile> Search(string pattern)
 		{
 			GoomezIndexHelper.Managers.SearchManager mgr = new GoomezIndexHelper.Managers.SearchManager();
-			return mgr.Search(pattern, GoomezIndexHelper.User.Fake(), 50);
+			return mgr.Search(pattern, GoomezIndexHelper.User.Fake(), int.MaxValue);
 		}
 	}
 }

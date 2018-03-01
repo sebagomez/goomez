@@ -60,3 +60,71 @@
 	align-items: center;
 	margin-top: 150px;
 }
+
+.resultHeader {
+	background-color: rgb(250,250,250);
+	height: 100px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: rgb(235,235,235);
+}
+
+.smallLogo {
+	font-family: Product Sans;
+	font-size: 40px;
+	font-weight: bold;
+
+	padding-left:13px;
+	padding-right: 10px;
+}
+
+	.smallLogo:hover {
+		cursor: pointer;
+	}
+
+.smallCount {
+	color: rgb(128,128,128);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	height: 43px;
+}
+
+.resultBody {
+	padding-left: 50px;
+	padding-right: 50px;
+	padding-top: 20px;
+}
+
+.resultItem {
+	margin-bottom: 26px;
+}
+
+.file {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+	color: rgb(26,13,171);
+}
+
+	.file:hover {
+		color: rgb(26,13,171);
+	}
+
+.full {
+	color:rgb(0,102,33);
+}
+
+.size {
+	color:rgb(84,84,84);
+	font-size: 13px;
+}
+
+.folder {
+	font-size: 10px;
+	color: rgb(84,84,84);
+	cursor: pointer;
+}

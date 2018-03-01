@@ -10,6 +10,7 @@
 		<inclusion>\\dionisiod\setups</inclusion>
 		<inclusion>\\fs-zona\Software</inclusion>
 		<inclusion>\\GXFS\Public\Software</inclusion>
+		<inclusion>\\GXFS\Desarrollo\Software</inclusion>
 	</inclusions>
 	<extensions>
 		<extension>.exe</extension>

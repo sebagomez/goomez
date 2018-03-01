@@ -28,7 +28,7 @@ export class Home extends React.Component<RouteComponentProps<{}>, SearchState> 
 			<div className="bigLogo"><span className="blue">G</span><span className="red">o</span><span className="yellow">o</span><span className="blue">m</span><span className="green">e</span><span className="red z">z</span></div>
 			<div className="inputDiv">
 				<input className="bigInput" name="inputPattern" value={this.state ? this.state.searchPattern : ''} onChange={evt => this.updateInputValue(evt)} onKeyUp={evt => this.keyUpHandler(evt)} />
-				</div>
+			</div>
 		</div>;
 	}
 }

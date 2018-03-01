@@ -22,7 +22,7 @@ export class ResultFile extends React.Component<ResultFileProps, ResultFileState
 		document.execCommand('copy')
 		textField.remove()
 
-		this.setState({ clipboardMessage: "Path copied to clipbiard" });
+		this.setState({ clipboardMessage: "Path copied to clipboard" });
 
 		setTimeout(() => this.setState({ clipboardMessage: "Copy folder path" }), 1500);
 	}

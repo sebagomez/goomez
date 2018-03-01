@@ -14,6 +14,9 @@ interface SearchState {
 export class Search extends React.Component<RouteComponentProps<{}>, SearchState> {
 
 	search(pattern: string) {
+
+		this.setState({ files: [], loading: true });
+
 		let t0 = performance.now();
 		fetch('api/Search/Search?pattern=' + pattern)
 			.then(response => response.json() as Promise<IndexedFile[]>)
@@ -33,7 +36,7 @@ export class Search extends React.Component<RouteComponentProps<{}>, SearchState
 
 	keyUpHandler(evt: any) {
 		if (evt.keyCode && evt.keyCode === 13)
-			this.search(this.state.pattern);
+			this.goSearch();
 	}
 
 	componentDidMount() {
@@ -43,13 +46,19 @@ export class Search extends React.Component<RouteComponentProps<{}>, SearchState
 
 	goHome() {
 		this.props.history.push({ pathname: '/' });
+		
+	}
+
+	goSearch() {
+		this.props.history.push({ pathname: '/search', search: '?q=' + this.state.pattern });
+		this.search(this.state.pattern);
 	}
 
 	public render() {
 		let pattern = decodeURIComponent(this.props.location.search.substr(3));
 
 		let contents = !this.state || this.state.loading
-			? <p><em>Loading resutls for {pattern}...</em></p>
+			? <div className="resultBody smallCount">Loading resutls for {pattern}...</div>
 			: this.rednderResults(this.state.files);
 
 		return <div>
@@ -59,20 +68,21 @@ export class Search extends React.Component<RouteComponentProps<{}>, SearchState
 					<input className="bigInput" name="inputPattern" value={this.state ? this.state.pattern : ''} onChange={evt => this.updateInputValue(evt)} onKeyUp={evt => this.keyUpHandler(evt)} />
 				</div>
 			</div>
+
 			{contents}
 		</div>;
 	}
 
 	rednderResults(files: IndexedFile[]) {
 
-		let count = this.state.files.length > 0 ? this.state.files.length : "Ningún";
+		let count = files.length > 0 ? files.length : "No";
 		let secs = this.state.milliseconds / 1000;
-		let plural = this.state.files.length > 1 ? "s" : "";
+		let plural = files.length !== 1 ? "s" : "";
 
 		return <div className="resultBody">
-			<div className="smallCount">{count} resultado{plural} ({secs} segundos)</div>
+			<div className="smallCount">{count} result{plural} found ({secs} secs)</div>
 
-			{this.state.files.map(file =>
+			{files.map(file =>
 				<ResultFile key={file.full} file={file} />
 			)}
 		</div>

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -125,58 +126,56 @@ namespace GoomezIndexHelper.Managers
 			if (pattern.ToLower().Contains(UNAUTHORIZED))
 				return list;
 
-			//using (IndexSearcher searcher = new IndexSearcher(SearchDirectory, true))
 			IndexSearcher searcher = new IndexSearcher(SearchIndex);
+			list = new List<IndexedFile>();
+
+			string originalPattern = pattern;
+			string tokenizedPattern = Tokenizer.Tokenize(pattern, false);
+			if (pattern != tokenizedPattern)
+				pattern = pattern + " OR \"" + tokenizedPattern + "\"";
+
+			QueryParser parser = new QueryParser(Constants.LuceneVersion, Constants.Content, new StandardAnalyzer(Constants.LuceneVersion))
 			{
-				list = new List<IndexedFile>();
+				DefaultOperator = QueryParser.AND_OPERATOR
+			};
+			Query query = parser.Parse(pattern);
 
-				string originalPattern = pattern;
-				string tokenizedPattern = Tokenizer.Tokenize(pattern, false);
-				if (pattern != tokenizedPattern)
-					pattern = pattern + " OR \"" + tokenizedPattern + "\"";
+			TopDocs docs = searcher.Search(query, max);
 
-				QueryParser parser = new QueryParser(Constants.LuceneVersion, Constants.Content, new StandardAnalyzer(Constants.LuceneVersion))
+			foreach (ScoreDoc scoreDoc in docs.ScoreDocs)
+			{
+				if (list.Count == max)
+					break;
+
+
+				Document doc = searcher.Doc(scoreDoc.Doc);
+
+				string full = doc.Get(Constants.Full);
+				if (list.Any(f => f.Full == full))
+					continue;
+
+				IndexedFile fi = new IndexedFile
 				{
-					DefaultOperator = QueryParser.AND_OPERATOR
+					Full = full,
+					File = doc.Get(Constants.File),
+					Folder = doc.Get(Constants.Folder),
+					Extension = doc.Get(Constants.Extension),
+					Size = long.Parse(doc.Get(Constants.Size))
 				};
-				Query query = null;
-				try
-				{
-					query = parser.Parse(pattern);
-				}
-				catch (IOException) { }
 
-				//Query query = new MatchAllDocsQuery(); 
 
-				TopDocs docs = searcher.Search(query, max);
-				//TraceManager.Debug($"{docs.TotalHits} hits found for '{pattern}'");
-
-				foreach (ScoreDoc scoreDoc in docs.ScoreDocs)
-				{
-					if (list.Count == max)
-						break;
-
-					IndexedFile fi = new IndexedFile();
-
-					Document doc = searcher.Doc(scoreDoc.Doc);
-					fi.Full = doc.Get(Constants.Full);
-					fi.File = doc.Get(Constants.File);
-					fi.Folder = doc.Get(Constants.Folder);
-					fi.Extension = doc.Get(Constants.Extension);
-					fi.Size = long.Parse(doc.Get(Constants.Size));
-
-					list.Add(fi);
-				}
-
-				if (list.Count > 0 &&
-					!string.IsNullOrEmpty(m_HistoryPath) &&
-					!string.IsNullOrEmpty(user.Name))
-				{
-					Thread saveThread = new Thread(SaveSearch);
-					object[] parms = new object[] { originalPattern, user };
-					saveThread.Start(parms);
-				}
+				list.Add(fi);
 			}
+
+			if (list.Count > 0 &&
+				!string.IsNullOrEmpty(m_HistoryPath) &&
+				!string.IsNullOrEmpty(user.Name))
+			{
+				Thread saveThread = new Thread(SaveSearch);
+				object[] parms = new object[] { originalPattern, user };
+				saveThread.Start(parms);
+			}
+
 			return list;
 
 		}

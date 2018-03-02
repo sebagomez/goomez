@@ -74,7 +74,6 @@ export class Search extends React.Component<RouteComponentProps<{}>, SearchState
 	}
 
 	rednderResults(files: IndexedFile[]) {
-
 		let count = files.length > 0 ? files.length : "No";
 		let secs = this.state.milliseconds / 1000;
 		let plural = files.length !== 1 ? "s" : "";

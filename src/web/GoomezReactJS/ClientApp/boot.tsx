@@ -1,4 +1,5 @@
 import './css/site.css';
+import './css/goomez.css';
 import 'bootstrap';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

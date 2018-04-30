@@ -6,7 +6,7 @@
 	</exclusions>
 	<inclusions>
  		<inclusion>\\cristianpc-w10\Software</inclusion>
- 		<inclusion>\\dionisiod\artech-r</inclusion>
+ 		<inclusion>\\dionisiod\artech-r\UTILS</inclusion>
 		<inclusion>\\dionisiod\setups</inclusion>
 		<inclusion>\\GXFS\Public\Software</inclusion>
 		<inclusion>\\GXFS\SoftwareGx</inclusion>

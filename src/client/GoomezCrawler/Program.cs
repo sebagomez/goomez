@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -8,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml;
 
-using GoomezIndexHelper;
 using GoomezIndexHelper.Managers;
 using Microsoft.Extensions.Configuration;
 
@@ -74,7 +72,7 @@ namespace GoomezCrawler
 
 				// https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/index?tabs=basicconfiguration
 				var builder = new ConfigurationBuilder()
-					.SetBasePath(Directory.GetCurrentDirectory())
+					.SetBasePath(K_CURRENTPATH)
 					.AddJsonFile("appsettings.json");
 
 				Configuration = builder.Build();
@@ -106,13 +104,7 @@ namespace GoomezCrawler
 			}
 			catch (Exception ex)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Internal error");
-				Console.WriteLine(ex.Message);
-				Console.WriteLine(ex.StackTrace);
-				Console.WriteLine("Press any key to exit...");
-				Console.ReadKey();
-
+				PrintError(ex);
 			}
 			finally
 			{
@@ -126,6 +118,16 @@ namespace GoomezCrawler
 			}
 
 			return -1;
+		}
+
+		private static void PrintError(Exception ex)
+		{
+			ConsoleColor before = Console.ForegroundColor;
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("== ERROR ==");
+			Console.WriteLine(ex.Message);
+			Console.WriteLine(ex.StackTrace);
+			Console.ForegroundColor = before;
 		}
 
 		private static void PrintHelp()
@@ -200,15 +202,11 @@ namespace GoomezCrawler
 			}
 			catch (Exception ex)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("== ERROR ==");
-				Console.WriteLine(ex.Message);
-				Console.WriteLine(ex.StackTrace);
+				PrintError(ex);
 			}
 			finally
 			{
 				IndexManager.CloseIndex();
-				//ShowSummary();
 			}
 		}
 
@@ -250,15 +248,11 @@ namespace GoomezCrawler
 			}
 			catch (Exception ex)
 			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("== ERROR ==");
-				Console.WriteLine(ex.Message);
-				Console.WriteLine(ex.StackTrace);
+				PrintError(ex);
 			}
 			finally
 			{
 				IndexManager.CloseIndex();
-				//ShowSummary();
 			}
 		}
 
@@ -399,26 +393,17 @@ namespace GoomezCrawler
 				Console.WriteLine("");
 				Console.WriteLine(errorMsg);
 				Console.ForegroundColor = cc;
-
-				//TraceManager.Error(errorMsg);
 			}
 		}
 
 		private static void ShowSummary()
 		{
-			ShowAndLog("\r\nIndexing started at " + started.ToShortTimeString() + " and ended at " + DateTime.Now.ToShortTimeString());
+			ShowAndLog($"{System.Environment.NewLine}Indexing started at {started.ToShortTimeString()} and ended at {DateTime.Now.ToShortTimeString()}");
 			string summary = string.Format("It took '{0:0.#}' seconds to index {1} files. Parallel:{2} Errors:{3}", chrono.Elapsed.TotalSeconds, m_indexed, UseParallel, errors);
-			//TraceManager.Debug(summary);
 			ShowAndLog(summary);
 			if (errors)
 			{
-				//Console.WriteLine("=== ERRORS ===");
-				//foreach (string errorLine in m_errors.Values)
-				//{
-				//    Console.WriteLine(errorLine);
-				//}
-				//Console.WriteLine("=== ERRORS ===");
-				ShowAndLog(string.Format("There were {0} errors", m_errors.Values.Count));
+				ShowAndLog($"There were {m_errors.Values.Count} errors");
 				AddExclusions();
 			}
 			else

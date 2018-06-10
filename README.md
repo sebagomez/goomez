@@ -6,4 +6,7 @@ It also has a web client for resolving queries to the index, it's a very Google-
 
 It's been recently migrated to .NET Core 2.0 and the web client is an [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/) 2.0 app with [ReactJS](https://reactjs.org/).
 
+Log:
+- June 9th, 2018. Migrated to .NET Core 2.1
+
 ![](images/Goomez.gif?raw=true)

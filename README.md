@@ -4,9 +4,10 @@ Goomez search is a [Lucene.Net](http://lucenenet.apache.org/) client that indexe
 
 It also has a web client for resolving queries to the index, it's a very Google-like web interface. I actually inspected the css properties from Google.com
 
-It's been recently migrated to .NET Core 2.0 and the web client is an [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/) 2.0 app with [ReactJS](https://reactjs.org/).
+It was originally a ASP.NET WebForms app, but It's been migrated to .NET Core and the web client is an [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/) app with [ReactJS](https://reactjs.org/).
 
 Log:
+- April 24th, 2019. Migrated to .NET Core 2.2
 - June 9th, 2018. Migrated to .NET Core 2.1
 
 ![](images/Goomez.gif?raw=true)

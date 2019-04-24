@@ -268,7 +268,7 @@ namespace GoomezCrawler
 				if (!OkToIndex(folder))
 					return;
 
-				Parallel.ForEach<string>(Directory.GetDirectories(folder), childFolder =>
+				Parallel.ForEach(Directory.GetDirectories(folder), childFolder =>
 				{
 					ParallelIndexFolder(childFolder);
 				});

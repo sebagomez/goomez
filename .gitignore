@@ -1,7 +1,7 @@
 
-packages/
-bin/
-obj/
+[Pp]ackages/
+[Bb]in/
+[Oo]bj/
 node_modules/
 .vs/
 .vscode/

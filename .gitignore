@@ -7,4 +7,5 @@ node_modules/
 .vscode/
 
 *.suo
+# BEWARE: it has my GeneXus LDAP passsword
 goomez.msbuild

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Home } from './Home';
 
 export interface LayoutProps {
     children?: React.ReactNode;

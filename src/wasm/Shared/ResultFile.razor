@@ -1,0 +1,16 @@
+@using GoomezIndexHelper.Data
+
+<div key="@File.Full" class="resultItem">
+	<a href="file:///@File.Full" class="file">@File.File</a>
+	<div class="full">@File.Full</div>
+	<span class="size">@File.Size bytes</span>  <span  class="folder">@ClipboardMessage</span>
+
+	@* //onClick={() => this.copyToClipboard(this.props.file.folder)} *@
+</div>
+
+@code{
+	[Parameter]
+	public IndexedFile File {get; set;}
+
+	public string ClipboardMessage { get; set;} = "Copy folder path";
+}

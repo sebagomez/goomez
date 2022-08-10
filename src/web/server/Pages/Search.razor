@@ -1,0 +1,75 @@
+@page "/search"
+@inject NavigationManager NavManager
+@using Microsoft.Extensions.Logging
+@inject ILogger<IndexedFile> Logger
+@using GoomezIndexHelper.Data
+
+<div>
+	<div class="resultHeader">
+		<div class="smallLogo" title="Go home" @onclick="@(() => NavManager.NavigateTo("/"))"><span class="blue">G</span><span class="red">o</span><span class="yellow">o</span><span class="blue">m</span><span class="green">e</span><span class="red z">z</span></div>
+		<div class="inputDiv">
+			<input class="bigInput" name="inputPattern" @bind="Pattern" @onkeyup="NavigateOnEnter" />
+		</div>
+	</div>
+
+	 <div class="resultBody">
+
+	@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+	{
+		<div class="errorMessage">An error occurred: @ErrorMessage</div>
+	}
+	else
+	{
+		if (Results == null)
+		{
+			<p><em>Loading...</em></p>
+		}
+		else
+		{
+			<div class="smallCount">Results for @Pattern (@Results?.Count files found)</div>
+
+			foreach (IndexedFile file in Results)
+			{
+				<ResultFile File="@file" />
+			}
+		}
+	}
+	</div>
+</div>
+
+@code {
+
+	[Parameter]
+	[SupplyParameterFromQuery(Name = "q")]
+	public string? Pattern { get; set; }
+	public string? ErrorMessage { get; set; }
+	public List<IndexedFile>? Results { get; set; } = null;
+
+	private void NavigateOnEnter(KeyboardEventArgs args)
+	{
+		if (args.Code == "Enter" && !string.IsNullOrWhiteSpace(Pattern))
+		{
+			NavManager.NavigateTo("search?q=" + Pattern);
+		}
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		Results = null;
+		try
+		{
+			Results = new List<IndexedFile>(await Task.Run(() => GetSearchResult()));
+		}
+		catch (Exception ex)
+		{
+			ErrorMessage = ex.Message;
+			Logger.LogError(ex,$"Could not get results for '{Pattern}'");
+		}
+	}
+
+	private IEnumerable<IndexedFile> GetSearchResult()
+	{
+		GoomezIndexHelper.Managers.SearchManager mgr = new GoomezIndexHelper.Managers.SearchManager();
+		return mgr.Search(Pattern, GoomezIndexHelper.User.Fake(), int.MaxValue);
+	}
+}

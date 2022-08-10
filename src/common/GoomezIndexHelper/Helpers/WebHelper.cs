@@ -10,7 +10,7 @@ namespace GoomezIndexHelper.Helpers
 	{
 		public static string WebStartupPath(Assembly ass)
 		{
-			string catalog = ass.CodeBase;
+			string catalog = ass.Location;
 
 			catalog = catalog.Replace("file:///", "");
 

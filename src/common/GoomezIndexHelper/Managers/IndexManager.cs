@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;

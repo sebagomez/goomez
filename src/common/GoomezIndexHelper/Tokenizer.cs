@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace GoomezIndexHelper
 {
@@ -8,9 +9,9 @@ namespace GoomezIndexHelper
 	{
 		public static string Tokenize(string path, bool manageExtension)
 		{
-			path = path.Replace(@"\", " ");
-			path = path.Replace(@"_", " ");
-			path = path.Replace(@"-", " ");
+			path = path.Replace(Path.DirectorySeparatorChar, ' ');
+			path = path.Replace('_', ' ');
+			path = path.Replace('-', ' ');
 			
 			if (manageExtension)
 			{

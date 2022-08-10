@@ -54,7 +54,9 @@ namespace GoomezCrawler
 			try
 			{
 
-				K_CURRENTPATH = Assembly.GetExecutingAssembly().Location.Remove(Assembly.GetExecutingAssembly().Location.LastIndexOf(@"\"));
+				K_CURRENTPATH = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName;
+
+				//K_CURRENTPATH = Assembly.GetExecutingAssembly().Location.Remove(Assembly.GetExecutingAssembly().Location.LastIndexOf(Path.DirectorySeparatorChar));
 
 				//TraceManager.Initialize("GoomezCrawler", Path.Combine(K_CURRENTPATH, "tracing.config"));
 
